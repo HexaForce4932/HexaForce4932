@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acoustic-drone-detector"
+version = "0.1.0"
+description = "Hybrid DSP + ML acoustic drone detector for Raspberry Pi."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "PyYAML>=6.0",
+    "joblib>=1.3",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+live = ["sounddevice>=0.4.6"]
+pi = ["RPi.GPIO>=0.7.1"]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+drone-detector = "drone_detector.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
