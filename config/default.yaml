@@ -1,0 +1,40 @@
+# Default configuration for the acoustic drone detector.
+# Copy this file and adjust for your hardware, then pass --config <your-file>.
+
+audio:
+  sample_rate: 16000
+  channels: 1              # 1 = single microphone, >1 = microphone array
+  chunk_duration: 1.0       # seconds of audio analyzed per detection cycle
+  device: null              # sounddevice device index/name, null = system default
+  mic_array:
+    enabled: false           # set true when using >1 channel and you want DOA estimation
+    geometry: linear         # linear | circular (informational; estimator uses adjacent pairs)
+    mic_spacing_m: 0.05       # distance between adjacent microphones, in meters
+    speed_of_sound_mps: 343.0
+
+dsp:
+  fundamental_min_hz: 80     # lower bound of expected rotor blade-passage frequency
+  fundamental_max_hz: 400    # upper bound of expected rotor blade-passage frequency
+  max_harmonics: 6            # how many harmonics of the fundamental to look for
+  harmonicity_threshold: 0.35 # min fraction of spectral energy in the harmonic comb
+  band_energy_min_db: -60.0   # noise floor gate, in dB, to reject near-silence
+
+ml:
+  enabled: true
+  model_path: models/drone_classifier.joblib
+  confirmation_threshold: 0.6 # min ML probability to confirm a DSP candidate as a drone
+  n_mfcc: 13
+
+detection:
+  cooldown_seconds: 5.0        # minimum time between repeated alerts
+  require_ml_confirmation: false # if true, a DSP hit alone never alerts without a loaded ML model
+
+alerts:
+  console: true
+  gpio_led:
+    enabled: false
+    pin: 17                   # BCM numbering
+  webhook:
+    enabled: false
+    url: null
+    timeout_seconds: 3.0
